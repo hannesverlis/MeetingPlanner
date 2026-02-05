@@ -64,7 +64,7 @@ body {
 #calendar-table th,
 #calendar-table td {
   border: 1px solid #e0e0e0;
-  padding: 0.2rem 0.25rem;
+  padding: 0.15rem 0.2rem;
   text-align: center;
 }
 
@@ -75,10 +75,10 @@ body {
 }
 
 .time-col {
-  min-width: 26px;
-  width: 26px;
-  font-size: 0.7rem;
-  padding: 0.2rem 0.15rem;
+  min-width: 18px;
+  width: 18px;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.1rem;
 }
 
 .day-group {
@@ -117,9 +117,9 @@ body {
 }
 
 .cell {
-  min-width: 26px;
-  width: 26px;
-  height: 32px;
+  min-width: 18px;
+  width: 18px;
+  height: 28px;
   cursor: pointer;
   transition: background-color 0.15s, box-shadow 0.15s;
   user-select: none;
@@ -153,4 +153,133 @@ body {
 
 .table-info p:last-child {
   margin-bottom: 0;
+}
+
+/* ========== Mobile responsive ========== */
+
+@media (max-width: 768px) {
+  body {
+    padding: 0.5rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.25rem;
+  }
+
+  .week-input-wrap {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+  }
+
+  .week-input-wrap label {
+    font-size: 0.85rem;
+  }
+
+  #week-input {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .week-label {
+    font-size: 0.8rem;
+    word-break: break-word;
+  }
+
+  .table-wrap {
+    margin: 0 -0.5rem;
+    border-radius: 0;
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+  }
+
+  #calendar-table {
+    font-size: 0.8rem;
+  }
+
+  #calendar-table th,
+  #calendar-table td {
+    padding: 0.25rem 0.2rem;
+  }
+
+  .person-col {
+    min-width: 44px;
+    width: 44px;
+    font-size: 0.8rem;
+  }
+
+  .person-cell {
+    font-size: 0.85rem;
+  }
+
+  .time-col {
+    min-width: 18px;
+    width: 18px;
+    font-size: 0.6rem;
+  }
+
+  .cell {
+    min-width: 18px;
+    width: 18px;
+    height: 32px;
+    min-height: 32px;
+  }
+
+  .table-info {
+    margin-top: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 0.4rem;
+  }
+
+  .header h1 {
+    font-size: 1.1rem;
+  }
+
+  .person-col {
+    min-width: 40px;
+    width: 40px;
+  }
+
+  .person-cell {
+    font-size: 0.8rem;
+  }
+
+  .time-col {
+    min-width: 16px;
+    width: 16px;
+    font-size: 0.55rem;
+  }
+
+  .cell {
+    min-width: 16px;
+    width: 16px;
+    height: 30px;
+    min-height: 30px;
+  }
+
+  .day-group {
+    font-size: 0.7rem;
+  }
+
+  .table-info p {
+    margin: 0.2rem 0;
+  }
+
+  .table-info {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.6rem;
+  }
 }
