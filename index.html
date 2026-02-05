@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kohtumise aja planeerija</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Kohtumise aja planeerija</h1>
+    <div class="week-input-wrap">
+      <label for="week-input">Nädal või kuupäevad:</label>
+      <input type="text" id="week-input" placeholder="nt 6 või 3.02–9.02.2025" />
+      <span id="week-label" class="week-label"></span>
+    </div>
+  </header>
+
+  <main>
+    <div class="table-wrap">
+      <table id="calendar-table">
+        <thead id="table-head">
+          <!-- Two header rows filled by JS: day names, then hours -->
+        </thead>
+        <tbody id="table-body">
+          <!-- Rows filled by JS -->
+        </tbody>
+      </table>
+    </div>
+    <div class="table-info">
+      <p><strong>Lohistamine:</strong> Vajuta sobivale ruudule ja lohista hiirt samal real – kõik vahepealsed ruudud märgitakse valituks. Kui alustad juba valitud ruudult, siis lohistamine eemaldab märgid.</p>
+      <p><strong>Tühistamine:</strong> Klõpsa ruudul uuesti või lohista valitud ruutude pealt – need muutuvad tühjaks.</p>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
