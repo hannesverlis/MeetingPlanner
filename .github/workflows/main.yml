@@ -1,0 +1,6 @@
+| Secret            | Väärtus                              |
+| ----------------- | ------------------------------------ |
+| `SERVER_HOST`     | `37.27.193.70`                       |
+| `SERVER_USER`     | `root`                               |
+| `SERVER_PORT`     | `22`                                 |
+| `SSH_PRIVATE_KEY` | `id_ed25519` private key (KOGU SISU) |
