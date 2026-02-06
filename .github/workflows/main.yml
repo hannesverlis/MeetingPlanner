@@ -1,6 +1,36 @@
-| Secret            | Väärtus                              |
-| ----------------- | ------------------------------------ |
-| `SERVER_HOST`     | `37.27.193.70`                       |
-| `SERVER_USER`     | `root`                               |
-| `SERVER_PORT`     | `22`                                 |
-| `SSH_PRIVATE_KEY` | `id_ed25519` private key (KOGU SISU) |
+name: Deploy MeetingPlanner
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Copy files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          port: ${{ secrets.SERVER_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "docker-compose.yml,index.html,style.css,app.js"
+          target: "/opt/meetingplanner"
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          port: ${{ secrets.SERVER_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/meetingplanner
+            docker compose down || true
+            docker compose up -d
