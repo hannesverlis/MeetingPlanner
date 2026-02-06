@@ -1,0 +1,14 @@
+{
+  "name": "meetingplanner",
+  "version": "1.0.0",
+  "description": "Kohtumise aja planeerija",
+  "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --coverage --ci"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}
