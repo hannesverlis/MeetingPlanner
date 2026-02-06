@@ -1,11 +1,6 @@
 services:
   meetingplanner:
-    image: nginx:alpine
-    container_name: meetingplanner
-    volumes:
-      - ./index.html:/usr/share/nginx/html/index.html:ro
-      - ./style.css:/usr/share/nginx/html/style.css:ro
-      - ./app.js:/usr/share/nginx/html/app.js:ro
+    image: hannes2020/meetingplanner:latest
     ports:
       - "8080:80"
     restart: unless-stopped
