@@ -121,20 +121,26 @@
     return out;
   }
 
+  function getApiBase() {
+    return (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+  }
+
   function fetchState() {
     const meetingId = getMeetingId();
     if (!meetingId) return Promise.resolve();
     const weekStartTs = String(weekStart.getTime());
-    const url = '/api/meetings/' + encodeURIComponent(meetingId) + '/state?weekStart=' + weekStartTs;
+    const url = getApiBase() + '/api/meetings/' + encodeURIComponent(meetingId) + '/state?weekStart=' + weekStartTs;
     return fetch(url)
-      .then(function (r) { return r.ok ? r.json() : {}; })
+      .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (parsed) {
-        state = {};
-        for (const key of Object.keys(parsed || {})) {
-          state[key] = new Set(parsed[key]);
+        if (parsed && typeof parsed === 'object') {
+          state = {};
+          for (const key of Object.keys(parsed)) {
+            state[key] = new Set(parsed[key]);
+          }
         }
       })
-      .catch(function () { state = {}; });
+      .catch(function () {});
   }
 
   function saveState() {
@@ -142,7 +148,7 @@
     const meetingId = getMeetingId();
     if (meetingId) {
       const weekStartTs = String(weekStart.getTime());
-      fetch('/api/meetings/' + encodeURIComponent(meetingId) + '/state?weekStart=' + weekStartTs, {
+      fetch(getApiBase() + '/api/meetings/' + encodeURIComponent(meetingId) + '/state?weekStart=' + weekStartTs, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(out)
@@ -326,12 +332,11 @@
   function init() {
     const meetingId = getMeetingId();
     if (meetingId) {
-      fetchState().then(function () {
-        document.getElementById('week-label').textContent = getWeekLabel(weekStart);
-        renderTable();
-        setupListeners();
-        startPolling();
-      });
+      document.getElementById('week-label').textContent = getWeekLabel(weekStart);
+      setupListeners();
+      renderTable();
+      startPolling();
+      fetchState().then(function () { renderTable(); });
     } else {
       loadState();
       document.getElementById('week-label').textContent = getWeekLabel(weekStart);
@@ -340,22 +345,7 @@
     }
   }
 
-  function formatDateTime(d) {
-    var day = d.getDate();
-    var month = d.getMonth() + 1;
-    var year = d.getFullYear();
-    var h = d.getHours();
-    var min = d.getMinutes();
-    return day + '.' + month + '.' + year + ' ' + (h < 10 ? '0' : '') + h + ':' + (min < 10 ? '0' : '') + min;
-  }
-
-  function setLastUpdate() {
-    var el = document.getElementById('last-update');
-    if (el) el.textContent = 'Last deploy: ' + formatDateTime(new Date());
-  }
-
   function setupListeners() {
-    setLastUpdate();
     var m = getMeetingId();
     var hintEl = document.getElementById('shared-hint');
     if (hintEl) {
