@@ -27,6 +27,7 @@ jobs:
         with:
           context: .
           push: true
+          tags: |
             hannes2020/meetingplanner:latest
             hannes2020/meetingplanner:v1.0.0
 
