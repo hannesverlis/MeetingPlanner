@@ -23,6 +23,19 @@ body {
   font-size: 1.5rem;
 }
 
+.shared-hint {
+  width: 100%;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.shared-hint code {
+  background: #eee;
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+}
+
 .week-input-wrap {
   display: flex;
   align-items: center;

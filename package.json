@@ -2,10 +2,15 @@
   "name": "meetingplanner",
   "version": "1.0.0",
   "description": "Kohtumise aja planeerija",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "test:ci": "jest --coverage --ci"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",

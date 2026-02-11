@@ -1,6 +1,11 @@
 services:
   meetingplanner:
-    image: hannes2020/meetingplanner:v1.0.0
+    build: .
     ports:
-      - "8080:80"
+      - "8080:3000"
     restart: unless-stopped
+    volumes:
+      - meetingplanner-data:/app/data
+
+volumes:
+  meetingplanner-data:

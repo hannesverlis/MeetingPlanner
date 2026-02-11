@@ -17,6 +17,8 @@
 
   let weekStart = getWeekStartForCurrentWeek();
   let state = {}; // { "day-hour": Set(personIndex), ... }
+  const POLL_INTERVAL_MS = 5000;
+  let pollingIntervalId = null;
 
   function getWeekStartForCurrentWeek() {
     const now = new Date();
@@ -86,7 +88,12 @@
     return 'meeting-planner-' + weekStart.getTime();
   }
 
-  function loadState() {
+  function getMeetingId() {
+    const params = new URLSearchParams(window.location.search);
+    return (params.get('meeting') || '').trim();
+  }
+
+  function loadStateLocal() {
     try {
       const raw = localStorage.getItem(getStorageKey());
       if (raw) {
@@ -101,12 +108,62 @@
     state = {};
   }
 
-  function saveState() {
+  function loadState() {
+    if (getMeetingId()) return;
+    loadStateLocal();
+  }
+
+  function serializeState() {
     const out = {};
     for (const key of Object.keys(state)) {
       out[key] = Array.from(state[key]);
     }
-    localStorage.setItem(getStorageKey(), JSON.stringify(out));
+    return out;
+  }
+
+  function fetchState() {
+    const meetingId = getMeetingId();
+    if (!meetingId) return Promise.resolve();
+    const weekStartTs = String(weekStart.getTime());
+    const url = '/api/meetings/' + encodeURIComponent(meetingId) + '/state?weekStart=' + weekStartTs;
+    return fetch(url)
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .then(function (parsed) {
+        state = {};
+        for (const key of Object.keys(parsed || {})) {
+          state[key] = new Set(parsed[key]);
+        }
+      })
+      .catch(function () { state = {}; });
+  }
+
+  function saveState() {
+    const out = serializeState();
+    const meetingId = getMeetingId();
+    if (meetingId) {
+      const weekStartTs = String(weekStart.getTime());
+      fetch('/api/meetings/' + encodeURIComponent(meetingId) + '/state?weekStart=' + weekStartTs, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(out)
+      }).catch(function () {});
+    } else {
+      localStorage.setItem(getStorageKey(), JSON.stringify(out));
+    }
+  }
+
+  function pollState() {
+    if (!getMeetingId()) return;
+    const oldStr = JSON.stringify(serializeState());
+    fetchState().then(function () {
+      const newStr = JSON.stringify(serializeState());
+      if (oldStr !== newStr) renderTable();
+    });
+  }
+
+  function startPolling() {
+    if (pollingIntervalId) return;
+    pollingIntervalId = setInterval(pollState, POLL_INTERVAL_MS);
   }
 
   function cellKey(day, hour) {
@@ -255,26 +312,56 @@
     weekStart = new Date(newStart.getTime());
     weekStart.setHours(0, 0, 0, 0);
     loadState();
-    document.getElementById('week-label').textContent = getWeekLabel(weekStart);
-    renderTable();
+    if (getMeetingId()) {
+      fetchState().then(function () {
+        document.getElementById('week-label').textContent = getWeekLabel(weekStart);
+        renderTable();
+      });
+    } else {
+      document.getElementById('week-label').textContent = getWeekLabel(weekStart);
+      renderTable();
+    }
   }
 
   function init() {
-    loadState();
-    document.getElementById('week-label').textContent = getWeekLabel(weekStart);
+    const meetingId = getMeetingId();
+    if (meetingId) {
+      fetchState().then(function () {
+        document.getElementById('week-label').textContent = getWeekLabel(weekStart);
+        renderTable();
+        setupListeners();
+        startPolling();
+      });
+    } else {
+      loadState();
+      document.getElementById('week-label').textContent = getWeekLabel(weekStart);
+      renderTable();
+      setupListeners();
+    }
+  }
 
+  function setupListeners() {
+    var m = getMeetingId();
+    var hintEl = document.getElementById('shared-hint');
+    if (hintEl) {
+      if (m) {
+        hintEl.style.display = 'block';
+        var place = document.getElementById('meeting-id-placeholder');
+        if (place) place.textContent = m;
+      } else {
+        hintEl.style.display = 'none';
+      }
+    }
     document.getElementById('week-input').addEventListener('change', function () {
-      const parsed = parseWeekInput(this.value);
+      var parsed = parseWeekInput(this.value);
       if (parsed) applyWeek(parsed);
     });
     document.getElementById('week-input').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
-        const parsed = parseWeekInput(this.value);
+        var parsed = parseWeekInput(this.value);
         if (parsed) applyWeek(parsed);
       }
     });
-
-    renderTable();
   }
 
   init();
