@@ -340,7 +340,22 @@
     }
   }
 
+  function formatDateTime(d) {
+    var day = d.getDate();
+    var month = d.getMonth() + 1;
+    var year = d.getFullYear();
+    var h = d.getHours();
+    var min = d.getMinutes();
+    return day + '.' + month + '.' + year + ' ' + (h < 10 ? '0' : '') + h + ':' + (min < 10 ? '0' : '') + min;
+  }
+
+  function setLastUpdate() {
+    var el = document.getElementById('last-update');
+    if (el) el.textContent = 'Last deploy: ' + formatDateTime(new Date());
+  }
+
   function setupListeners() {
+    setLastUpdate();
     var m = getMeetingId();
     var hintEl = document.getElementById('shared-hint');
     if (hintEl) {

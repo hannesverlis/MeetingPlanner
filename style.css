@@ -169,6 +169,13 @@ body {
   margin-bottom: 0;
 }
 
+.last-update {
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+
 /* ========== Mobile responsive ========== */
 
 @media (max-width: 768px) {
