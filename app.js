@@ -90,7 +90,9 @@
 
   function getMeetingId() {
     const params = new URLSearchParams(window.location.search);
-    return (params.get('meeting') || '').trim();
+    const id = (params.get('meeting') || '').trim();
+    if (id) return id;
+    return 'default';
   }
 
   function loadStateLocal() {
