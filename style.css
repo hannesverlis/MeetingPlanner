@@ -44,8 +44,9 @@ body {
 }
 
 .week-label {
-  font-size: 0.9rem;
-  color: #555;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #222;
 }
 
 .table-wrap {
@@ -189,7 +190,8 @@ body {
   }
 
   .week-label {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 600;
     word-break: break-word;
   }
 

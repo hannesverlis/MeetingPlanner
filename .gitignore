@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# Backend data (keskne salvestus)
+data/
+
 # Jest coverage
 coverage/
 
