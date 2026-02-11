@@ -17,7 +17,7 @@
 
   let weekStart = getWeekStartForCurrentWeek();
   let state = {}; // { "day-hour": Set(personIndex), ... }
-  const POLL_INTERVAL_MS = 5000;
+  const POLL_INTERVAL_MS = 4000;
   let pollingIntervalId = null;
 
   function getWeekStartForCurrentWeek() {
